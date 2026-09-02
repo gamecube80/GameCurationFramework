@@ -4,7 +4,40 @@
     ViewData["Title"] = "Home page";
 }
 
-<div class="text-center">
+<div>
     <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+
+    <form method="post">
+        <button type="submit" asp-page-handler="Roll">
+            Roll Tags
+        </button>
+    </form>
+
+    @if(Model.RolledTags.Any()) {
+        <h2>Monthly Tags</h2>
+
+        <ul>
+            @foreach(var tag in Model.RolledTags) {
+                <li class="mb-1">
+                    <div class="d-flex align-items-center">
+                        <span style="width: 100px;">@tag</span>
+
+                        <form method="post" style="display:inline">
+                            @foreach(var rolledTag in Model.RolledTags) {
+                                <input type="hidden"
+                                       name="RolledTags"
+                                       value="@rolledTag" />
+                            }
+
+                            <button type="submit"
+                                    asp-page-handler="Reroll"
+                                    asp-route-tag="@tag">
+                                Reroll
+                            </button>
+                        </form>
+                    </div>
+                </li>
+            }
+        </ul>
+    }
 </div>
