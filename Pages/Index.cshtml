@@ -20,7 +20,7 @@
             @foreach(var tag in Model.RolledTags) {
                 <li class="mb-1">
                     <div class="d-flex align-items-center">
-                        <span style="width: 200px;">@tag</span>
+                        <span style="width: 125px;">@tag</span>
 
                         <form method="post" style="display:inline">
                             @foreach(var rolledTag in Model.RolledTags) {
@@ -72,6 +72,7 @@
                                     <table class="table">
                                         <thead>
                                             <tr>
+                                                <th width="200px">Cover Art</th>
                                                 <th width="200px">
                                                     <button type="submit"
                                                             asp-page-handler="Sort"
@@ -113,9 +114,19 @@
                                         <tbody>
                                             @foreach(var game in games) {
                                                 <tr>
-                                                    <td>@game.Name</td>
-                                                    <td>@game.Price.ToString("C")</td>
-                                                    <td>@(game.UserRating?.ToString("0.0") ?? "N/A")</td>
+                                                    <td>
+                                                        @if(!string.IsNullOrWhiteSpace(game.CoverArtUrl)) {
+                                                            <img src="@game.CoverArtUrl"
+                                                                 alt="@game.Name cover"
+                                                                 style="width: 250px; height: 120px; object-fit: cover;" />
+                                                        }
+                                                        else {
+                                                            <span style="width: 250px;">No cover</span>
+                                                        }
+                                                    </td>
+                                                    <td valign="middle">@game.Name</td>
+                                                    <td valign="middle">@game.Price.ToString("C")</td>
+                                                    <td valign="middle">@(game.UserRating?.ToString("0.0") ?? "N/A")</td>
                                                 </tr>
                                             }
                                         </tbody>
