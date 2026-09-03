@@ -1,7 +1,22 @@
+using GameCurationFramework.Helpers;
+using Microsoft.Azure.Cosmos;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
+builder.Services.AddMemoryCache();
+
+builder.Services.AddSingleton(sp => {
+    var configuration = sp.GetRequiredService<IConfiguration>();
+
+    var endpoint = configuration["CosmosDb:AccountEndpoint"];
+    var key = configuration["CosmosDb:AccountKey"];
+
+    return new CosmosClient(endpoint, key);
+});
+
+builder.Services.AddScoped<GameDataService>();
 
 var app = builder.Build();
 
