@@ -29,12 +29,103 @@
                                        value="@rolledTag" />
                             }
 
+                            @foreach(var sortState in Model.SortByTag) {
+                                <input type="hidden"
+                                       name="SortByTag[@sortState.Key]"
+                                       value="@sortState.Value" />
+                            }
+
+                            @foreach(var sortState in Model.SortDescendingByTag) {
+                                <input type="hidden"
+                                       name="SortDescendingByTag[@sortState.Key]"
+                                       value="@sortState.Value.ToString()" />
+                            }
+
                             <button type="submit"
                                     asp-page-handler="Reroll"
                                     asp-route-tag="@tag">
                                 Reroll
                             </button>
                         </form>
+
+                        <div class="ms-3">
+                            @if(Model.MatchingGames.TryGetValue(tag, out var games)) {
+                                <form method="post">
+                                    @foreach(var rolledTag in Model.RolledTags) {
+                                        <input type="hidden"
+                                               name="RolledTags"
+                                               value="@rolledTag" />
+                                    }
+
+                                    @foreach(var sortState in Model.SortByTag) {
+                                        <input type="hidden"
+                                               name="SortByTag[@sortState.Key]"
+                                               value="@sortState.Value" />
+                                    }
+
+                                    @foreach(var sortState in Model.SortDescendingByTag) {
+                                        <input type="hidden"
+                                               name="SortDescendingByTag[@sortState.Key]"
+                                               value="@sortState.Value.ToString()" />
+                                    }
+
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th width="200px">
+                                                    <button type="submit"
+                                                            asp-page-handler="Sort"
+                                                            asp-route-tag="@tag"
+                                                            asp-route-sortColumn="Name">
+                                                        Name
+                                                        @if(Model.SortByTag.GetValueOrDefault(tag) == "Name") {
+                                                            @(Model.SortDescendingByTag.GetValueOrDefault(tag) ? "▾" : "▴")
+                                                        }
+                                                    </button>
+                                                </th>
+
+                                                <th width="100px">
+                                                    <button type="submit"
+                                                            asp-page-handler="Sort"
+                                                            asp-route-tag="@tag"
+                                                            asp-route-sortColumn="Price">
+                                                        Price
+                                                        @if(Model.SortByTag.GetValueOrDefault(tag) == "Price") {
+                                                            @(Model.SortDescendingByTag.GetValueOrDefault(tag) ? "▾" : "▴")
+                                                        }
+                                                    </button>
+                                                </th>
+
+                                                <th width="100px">
+                                                    <button type="submit"
+                                                            asp-page-handler="Sort"
+                                                            asp-route-tag="@tag"
+                                                            asp-route-sortColumn="Rating">
+                                                        Rating
+                                                        @if(Model.SortByTag.GetValueOrDefault(tag) == "Rating") {
+                                                            @(Model.SortDescendingByTag.GetValueOrDefault(tag) ? "▾" : "▴")
+                                                        }
+                                                    </button>
+                                                </th>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+                                            @foreach(var game in games) {
+                                                <tr>
+                                                    <td>@game.Name</td>
+                                                    <td>@game.Price.ToString("C")</td>
+                                                    <td>@(game.UserRating?.ToString("0.0") ?? "N/A")</td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </form>
+                            }
+                            else {
+                                <span class="ms-3 text-muted">No matching games</span>
+                            }
+                        </div>
                     </div>
                 </li>
             }
